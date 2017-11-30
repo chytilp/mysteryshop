@@ -76,6 +76,14 @@ WSGI_APPLICATION = 'mysteryshop.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'mystery_new',
+        'USER': 'mystery_new',
+        'PASSWORD': 'patrik',
+        'ATOMIC_REQUEST': True,
+        'HOST': 'localhost',
+    },
+    'old': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
@@ -95,10 +103,13 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
 
 DEFAULT_CALLING_CODE = '+420'
+
