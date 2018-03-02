@@ -1,12 +1,11 @@
-from enum import IntEnum
-
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _l
-
 from model_utils import Choices
 
-from utils.fields import PhoneNumberField
+from libs import cz_models
+from utils.models.fields import PhoneNumberField
 
 
 class Candidate(models.Model):
@@ -27,17 +26,18 @@ class Candidate(models.Model):
     first_name = models.CharField(verbose_name=_l('first name'), null=False, blank=False, max_length=50)
     last_name = models.CharField(verbose_name=_l('last name'), null=False, blank=False, max_length=50)
     email = models.EmailField(verbose_name=_l('first name'), null=False, blank=False)
-    personal_id = models.CharField()  # TODO: dodelat
+    personal_id = cz_models.CZBirthNumberField(verbose_name=_l('personal id'), blank=True, null=True)
     phone = PhoneNumberField(verbose_name=_l('phone'), blank=False, null=False)
     is_man = models.BooleanField(verbose_name=_l('is man'), blank=False, null=False)
     districts = models.TextField(verbose_name=_l('working districts'), blank=False, null=False)
-    city = models.CharField(verbose_name=_l('city'), blank=False, null=False)
-    address = models.CharField(verbose_name=_l('address'), blank=False, null=False)
+    city = models.CharField(verbose_name=_l('city'), blank=False, null=False, max_length=50)
+    address = models.CharField(verbose_name=_l('address'), blank=False, null=False, max_length=100)
     zip_code = models.PositiveSmallIntegerField(verbose_name=_l('zip code'))
     status = models.PositiveIntegerField(verbose_name=_l('status'), choices=STATUS, default=STATUS.NEW, blank=False,
                                          null=False)
     education = models.PositiveIntegerField(verbose_name=_l('education'), choices=EDUCATION, blank=False, null=False)
-    registered = models.DateTimeField(verbose_name=_l('registered'), auto_created_now=True)
+    registered = models.DateTimeField(verbose_name=_l('registered'), blank=False, null=False, default=timezone.now,
+                                      editable=False)
     status_change_by = models.ForeignKey(User, verbose_name=_l('status was changed by'), blank=True, null=True,
                                          related_name='candidates')
     status_change_when = models.DateTimeField(verbose_name=_l('status was changed when'), blank=True, null=True)
@@ -48,7 +48,7 @@ class Interviewer(models.Model):
 
     user = models.OneToOneField(User, verbose_name=_l('app user'), blank=False, null=False, related_name='interviewer')
     phone = PhoneNumberField(verbose_name=_l('phone'), blank=True, null=True)
-    bank_account = models.CharField(verbose_name=_l('bank account'), blank=True, null=True, max_length=30)  # TODO: dodelat
+    bank_account = cz_models.BankAccountNumber(verbose_name=_l('bank account number'), blank=True, null=True)
     visit_districts = models.ManyToManyField('project.District', verbose_name=_l('working districts'),
                                              through='InterviewerDistrict')
 
@@ -78,7 +78,8 @@ class InterviewerStatus(models.Model):
         (5, 'FINISHED', _l('Finished'))
     )
 
-    interviewer = models.ForeignKey(Interviewer, verbose_name=_l('interviewer'), null=False, blank=False, related_name='statuses')
+    interviewer = models.ForeignKey(Interviewer, verbose_name=_l('interviewer'), null=False, blank=False,
+                                    related_name='statuses')
     status = models.PositiveIntegerField(verbose_name=_l('status'), choices=STATUS, default=STATUS.UNAPPROVED)
     begin = models.DateTimeField(verbose_name=_l('begin date'), null=False, blank=False)
 

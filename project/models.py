@@ -1,7 +1,4 @@
-from enum import IntEnum
-
 from django.db import models
-from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _l
 
 from model_utils import Choices
@@ -76,7 +73,7 @@ class Shop(ActiveFieldMixin):
     category = models.CharField(verbose_name=_l('category'), blank=True, null=True, max_length=50)
     city = models.CharField(verbose_name=_l('city'), blank=True, null=True, max_length=100)
     address = models.CharField(verbose_name=_l('address'), blank=True, null=True, max_length=100)
-    zip = models.PositiveSmallIntegerField(verbose_name=_l('zip code'), blank=True, null=True, max_length=5)
+    zip_code = models.PositiveSmallIntegerField(verbose_name=_l('zip code'), blank=True, null=True)
 
     def __str__(self):
         return '{}-{}-{}-{}-{}'.format(self.client.name, self.name, self.type, self.city, self.address)

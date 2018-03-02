@@ -2,8 +2,8 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.encoding import force_text
 
-from .strings import normalize_phone_number
-from . import forms as utils_forms
+from utils.strings import normalize_phone_number
+from utils import forms as utils_forms
 
 
 class PhoneNumberField(models.CharField):

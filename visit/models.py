@@ -1,3 +1,5 @@
+from jsonfield.fields import JSONField
+
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _l
@@ -81,7 +83,7 @@ class Visit(models.Model):
     date_to = models.DateField(verbose_name=_l('visit to date'), null=False, blank=False)
     visit_day = models.DateField(verbose_name=_l('visit date'), blank=True, null=True)
     is_pm = models.NullBooleanField(verbose_name=_l('is pm time'), blank=True, null=True)
-    # data = JSONField(verbose_name=_l('questionnaire data'), blank=True, null=True)  # TODO: dodelat
+    data = JSONField(verbose_name=_l('questionnaire data'), null=True, blank=True)
     data_recorded = models.DateTimeField(verbose_name=_l('data recorded when'), blank=True, null=True)
     wage = models.ForeignKey(Wage, verbose_name=_l('wage'), blank=True, null=True, related_name='visits')
 
